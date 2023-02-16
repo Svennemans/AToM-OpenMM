@@ -200,38 +200,14 @@ class OMMWorker(object):
             return None
 
     def _openmm_worker_makecontext(self):
-        self.platform_properties = {}
-        if self.platform_name is not None:
-            if self.platform_name == 'OpenCL':
-                self.platform = Platform.getPlatformByName(self.platform_name)
-                self.platform_properties["OpenCLPlatformIndex"] = str(self.platformId)
-                self.platform_properties["DeviceIndex"] = str(self.deviceId)
-                self.platform_properties["Precision"] = "mixed"
-                self.logger.info("Worker using OpenCL OpenMM platform")
-            elif self.platform_name == "CUDA":
-                self.platform = Platform.getPlatformByName(self.platform_name)
-                self.platform_properties["DeviceIndex"] = str(self.deviceId)
-                self.platform_properties["Precision"] = "mixed"
-                self.logger.info("Worker using CUDA OpenMM platform")
-            elif self.platform_name == "HIP":
-                self.platform = Platform.getPlatformByName(self.platform_name)
-                self.platform_properties["DeviceIndex"] = str(self.deviceId)
-                self.platform_properties["Precision"] = "mixed"
-                self.logger.info("Worker using HIP OpenMM platform")
-            elif self.platform_name == "CPU":
-                self.platform = Platform.getPlatformByName(self.platform_name)
-                self.platform_properties["Threads"] = str(self.nthreads)
-                self.logger.info("Worker using CPU OpenMM platform")
-            elif self.platform_name == "Reference":
-                self.platform = Platform.getPlatformByName(self.platform_name)
-                self.logger.info("Worker using Reference OpenMM platform")
-            else:
-                self.logger.warning("Unrecognized platform name")
-        else:
-            self.platform = Platform.getPlatformByName('Reference')
-            self.logger.info("Worker using Reference OpenMM platform")
 
-        self.simulation = Simulation(self.topology, self.system, self.integrator, self.platform, self.platform_properties)
+        platform = Platform.getPlatformByName("CUDA")
+        platform_properties = {}
+        platform_properties["DeviceIndex"] = str(self.deviceId)
+        platform_properties["Precision"] = "mixed"
+        self.logger.info("Worker using CUDA OpenMM platform")
+
+        self.simulation = Simulation(self.topology, self.system, self.integrator, platform, platform_properties)
         self.context = self.simulation.context
         self.context.setPositions(self.positions)
         if self.boxvectors is not None:
