@@ -20,9 +20,10 @@
 #
 
 from setuptools import setup
-from async_re import __version__ as VERSION
 
-NAME = 'async_re'
+VERSION = '3.3.0'
+
+NAME = 'acellera-atom-openmm'
 
 MODULES = 'async_re', 'ommreplica', 'ommsystem', 'ommworker', 'local_openmm_transport', 'transport', 'gibbs_sampling', 'openmm_async_re'
 
