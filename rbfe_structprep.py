@@ -105,9 +105,8 @@ def do_mintherm(keywords, logger):
 
     print("Thermalization ...")
  
-    #FIX ME - get from control file
-    totalSteps = 150000
-    steps_per_cycle = 5000
+    totalSteps = int(self.keywords.get('EQUIL_MINIM_STEPS', 150000)) 
+    steps_per_cycle = int(self.keywords.get('STEPS_PER_CYCLE', 5000))
     number_of_cycles = int(totalSteps/steps_per_cycle)
     simulation.reporters.append(StateDataReporter(stdout, steps_per_cycle, step=True, potentialEnergy = True, temperature=True, volume=True))    
     
@@ -244,9 +243,8 @@ def do_lambda_annealing(keywords, logger):
 
     print("Annealing to lambda = 1/2 ...")
 
-    #FIX ME: get from keywords
-    totalSteps = 250000
-    steps_per_cycle = 5000
+    totalSteps = int(self.keywords.get('EQUIL_ANNEALING_STEPS', 250000))
+    steps_per_cycle = int(self.keywords.get('STEPS_PER_CYCLE',  5000))
     number_of_cycles = int(totalSteps/steps_per_cycle)
     deltalambda = (0.5 - 0.0)/float(number_of_cycles)
     simulation.reporters.append(StateDataReporter(stdout, steps_per_cycle, step=True, potentialEnergy = True, temperature=True))
@@ -359,9 +357,8 @@ def do_equil(keywords, logger):
 
     print("Equilibration at lambda = 1/2 ...")
 
-    #FIX ME: get from keywords
-    totalSteps = 150000
-    steps_per_cycle = 5000
+    totalSteps = int(self.keywords.get('EQUIL_STEPS'), 150000)
+    steps_per_cycle = int(self.keywords.get('STEPS_PER_CYCLE'), 5000)
     simulation.reporters.append(StateDataReporter(stdout, steps_per_cycle, step=True, potentialEnergy = True, temperature=True))
     simulation.reporters.append(DCDReporter(jobname + "_0.dcd", steps_per_cycle))
 
