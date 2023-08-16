@@ -1,3 +1,5 @@
+#! python
+
 import sys
 from sync.atm import openmm_job_AmberRBFE
 
