@@ -21,7 +21,7 @@
 
 from setuptools import setup
 
-VERSION = '3.3.0'
+VERSION = '3.3.0_rc4'
 
 NAME = 'acellera-atom-openmm'
 
