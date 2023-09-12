@@ -550,15 +550,40 @@ class OMMSystemAmberRBFE(OMMSystemAmber):
                                     offset = self.lig2offset)
 
     def set_integrator(self, temperature, frictionCoeff, MDstepsize, defaultMDstepsize = 0.001*picosecond):
-        #set the multiplicity of the calculation of bonded forces so that they are evaluated at least once every 1 fs (default time-step)
-        bonded_frequency = max(1, int(round(MDstepsize/defaultMDstepsize)))
-        self.logger.info("Running with a %f fs time-step with bonded forces integrated %d times per time-step" % (MDstepsize/femtosecond, bonded_frequency))
-        if self.doMetaD:
-            fgroups = [(0,bonded_frequency), (self.metaDforcegroup, bonded_frequency), (self.atmforcegroup,1)]
+
+        integrator = self.keywords.get('INTEGRATOR')
+        if integrator in ("MTS", None):
+            self.logger.info("Integrator: MTS")
+            #set the multiplicity of the calculation of bonded forces so that they are evaluated at least once every 1 fs (default time-step)
+            bonded_frequency = max(1, int(round(MDstepsize/defaultMDstepsize)))
+            self.logger.info("Running with a %f fs time-step with bonded forces integrated %d times per time-step" % (MDstepsize/femtosecond, bonded_frequency))
+            if self.doMetaD:
+                fgroups = [(0,bonded_frequency), (self.metaDforcegroup, bonded_frequency), (self.atmforcegroup,1)]
+            else:
+                fgroups = [(0,bonded_frequency), (self.atmforcegroup,1)]
+            self.integrator = ATMMTSLangevinIntegrator(temperature, frictionCoeff, MDstepsize, fgroups )
+
+        elif integrator == "Langevin":
+            self.logger.info(f"Integrator: {integrator}")
+            self.integrator = LangevinIntegrator(temperature, frictionCoeff, MDstepsize)
+            self.integrator.setIntegrationForceGroups({0, self.metaDforcegroup, self.atmforcegroup})
+
+            self.logger.info(f"Temperature: {self.integrator.getTemperature()}")
+            self.logger.info(f"Friction: {self.integrator.getFriction()}")
+
+        elif integrator == "LangevinMiddle":
+            self.logger.info(f"Integrator: {integrator}")
+            self.integrator = LangevinMiddleIntegrator(temperature, frictionCoeff, MDstepsize)
+            self.integrator.setIntegrationForceGroups({0, self.metaDforcegroup, self.atmforcegroup})
+
+            self.logger.info(f"Temperature: {self.integrator.getTemperature()}")
+            self.logger.info(f"Friction: {self.integrator.getFriction()}")
+
         else:
-            fgroups = [(0,bonded_frequency), (self.atmforcegroup,1)]
-        self.integrator = ATMMTSLangevinIntegrator(temperature, frictionCoeff, MDstepsize, fgroups )
-        self.integrator.setConstraintTolerance(0.00001)
+            raise ValueError(f"Unknown integrator: {integrator}")
+
+        self.logger.info(f"Step size: {self.integrator.getStepSize()}")
+        self.logger.info(f"Constraint toleratnce: {self.integrator.getConstraintTolerance()}")
 
     def set_atmforce(self):
         #these define the state and will be overriden in set_state()
