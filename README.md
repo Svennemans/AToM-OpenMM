@@ -31,22 +31,26 @@ Please [cite us](http://www.compmolbiophysbc.org/publications) if you use this s
 
 - [Asynchronous Replica Exchange Software for Grid and Heterogeneous Computing](http://www.compmolbiophysbc.org/publications#asyncre_software_2015)
 
-Installation & Usage
---------------------
+Installation
+------------
 
-It is recommended that the installation is performed in a personal python environment (`conda`, `miniconda`, or similar). AToM requires the `openmm`, `configobj` and `numpy` python modules. 
+1. Install `Mambaforge` (https://github.com/conda-forge/miniforge#mambaforge)
 
+2. Clone the repository
 ```
-conda create -n atm -c conda-forge ambertools openmm openmm-atmmetaforce-plugin configobj setproctitle r-base
-git clone https://github.com/Gallicchio-Lab/AToM-OpenMM.git
-cd AToM-OpenMM
-python setup.py install
-Rscript -e 'install.packages("UWHAM", repos = "http://cran.us.r-project.org")' 
+git clone https://github.com/Acellera/AToM-OpenMM.git AToM-OpenMM.git
 ```
 
-For NNP, install `openmm-ml` and `nnpops`:
+3. Create environment:
 ```
-conda install -c conda-forge openmm-ml nnpops
+cd AToM-OpenMM.git
+mamba env create
+```
+
+4. Install the R stuff
+```
+mamba activate atom
+Rscript -e 'install.packages("UWHAM", repos = "http://cran.us.r-project.org")'
 ```
 
 `setproctitle` above is optional but useful to track the names of the processes started by AToM-OpenMM. The `ambertools` package is not an actual dependency but it is needed to set up some of the systems in the examples. `r-base`, and the `UWHAM R package` is required for free energy estimation. See [examples](examples/) for examples and tutorials.

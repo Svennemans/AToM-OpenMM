@@ -1,0 +1,21 @@
+name: atom
+channels:
+  - conda-forge
+  # https://github.com/conda-forge/staged-recipes/pull/24021
+  - acellera
+dependencies:
+  - ambertools
+  - configobj
+  - openmm
+  - openmm-atmmetaforce-plugin
+  - openmm-torch >= 1.4
+  - openmm-ml >= 1.1
+  - nnpops
+  - r-base
+  - setproctitle
+  - torchmd-net >= 0.7
+
+  # PyPI
+  - pip
+  - pip:
+    - .

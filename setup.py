@@ -25,7 +25,7 @@ VERSION = '3.3.0_rc4'
 
 NAME = 'acellera-atom-openmm'
 
-MODULES = 'async_re', 'ommreplica', 'ommsystem', 'ommworker', 'local_openmm_transport', 'transport', 'gibbs_sampling', 'openmm_async_re'
+MODULES = 'async_re', 'ommreplica', 'ommsystem', 'ommworker', 'local_openmm_transport', 'transport', 'gibbs_sampling', 'openmm_async_re', 'atom_nnp_wrapper'
 
 
 SCRIPTS = 'abfe_explicit.py', 'rbfe_explicit.py', 'abfe_structprep.py', 'rbfe_structprep.py', 'rbfe_explicit_sync.py'

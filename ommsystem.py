@@ -94,7 +94,18 @@ class OMMSystemAmber(OMMSystem):
         if nnp_model := self.keywords.get('NNP_MODEL'):
             from openmmml import MLPotential
             self.logger.info(f'NNP model: {nnp_model}')
-            nnp = MLPotential(nnp_model)
+
+            nnp = None
+            if nnp_model.startswith("TorchMD-NET"):
+                import atom_nnp_wrapper
+                nnp_file = self.keywords["NNP_FILE"]
+                self.logger.info(f'NNP file: {nnp_file}')
+                max_num_neighbors = self.keywords["NNP_MAX_NUM_NEIGHBORS"]
+                self.logger.info(f'NNP max num neighbors: {max_num_neighbors}')
+                nnp = MLPotential(nnp_model, model_file=nnp_file, max_num_neighbors=max_num_neighbors, use_cuda_graphs=True)
+            else:
+                nnp = MLPotential(nnp_model)
+
             nnp_atoms = list(map(int, self.keywords['LIGAND1_ATOMS'] + self.keywords['LIGAND2_ATOMS']))
             self.logger.info(f'NNP atoms: {nnp_atoms}')
             self.logger.info(f'Number of NNP atoms: {len(nnp_atoms)}')
