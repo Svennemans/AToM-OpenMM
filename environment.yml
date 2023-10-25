@@ -1,8 +1,6 @@
 name: atom
 channels:
   - conda-forge
-  # https://github.com/conda-forge/staged-recipes/pull/24021
-  - acellera
 dependencies:
   - ambertools
   - configobj
